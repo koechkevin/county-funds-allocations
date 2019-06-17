@@ -6,25 +6,22 @@ try:
     allocation = models.Allocation.objects.all()
     for each in allocation:
         amount = each.__dict__['amount']
-    number_of_sub_counties = models.SubCounties.objects.count()
-    if number_of_sub_counties == 0:
-        number_of_sub_counties = 1
 except Exception as ex:
     pass
 
-sub_county_allocation = amount / number_of_sub_counties
-
 
 def ward_allocations(key):
-    ward = models.Ward.objects.filter(pk=key)
-    sub_county = 0
-    for a in ward:
-        sub_county = a.sub_county.__dict__['id']
-    number_of_wards_in_sub_county = models.Ward.objects.filter(sub_county_id=sub_county).count()
-    if number_of_wards_in_sub_county == 0:
-        number_of_wards_in_sub_county = 1
-    ward_allocation = sub_county_allocation / number_of_wards_in_sub_county
+    ward_count = models.Ward.objects.count()
+    number_of_wards = ward_count if ward_count > 0 else 1
+    ward_allocation = amount / number_of_wards
     return ward_allocation
+
+
+def sub_county_allocations(key):
+    my_wards = models.Ward.objects.filter(sub_county=key).count()
+    ward_allocation = ward_allocations(key)
+    sub_county_allocation = ward_allocation * my_wards
+    return sub_county_allocation
 
 
 def location_allocations(key):
