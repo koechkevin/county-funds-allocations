@@ -7,7 +7,7 @@ class SubCountiesSerializer(serializers.ModelSerializer):
     allocation = serializers.SerializerMethodField(read_only=True)
 
     def get_allocation(self, obj):
-        return allocations.sub_county_allocation
+        return allocations.sub_county_allocations(obj.id)
 
     class Meta:
         model = models.SubCounties
@@ -41,7 +41,7 @@ class LocationSerializer(serializers.ModelSerializer):
     allocation = serializers.SerializerMethodField(read_only=True)
 
     def get_allocation(self, obj):
-        return allocations.ward_allocations(obj.id)
+        return allocations.location_allocations(obj.id)
 
     class Meta:
         model = models.Location
@@ -53,7 +53,7 @@ class LocationCreateSerializer(serializers.ModelSerializer):
     allocation = serializers.SerializerMethodField(read_only=True)
 
     def get_allocation(self, obj):
-        return allocations.ward_allocations(obj.id)
+        return allocations.location_allocations(obj.id)
 
     class Meta:
         model = models.Location
